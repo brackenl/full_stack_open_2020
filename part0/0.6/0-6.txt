@@ -1,0 +1,27 @@
+note over browser:
+user types a new note and 
+clicks 'save'
+end note
+
+note over browser:
+spa.js updates the notes array 
+with the new note, regenerates 
+the html list and sends the new
+note to the server
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+server receives data, 
+updates its own version
+and confirms by sending 
+status 201 response
+end note
+
+server -> browser: {"message":"note created"}
+
+note over browser:
+no further action required
+from the browser
+end note
