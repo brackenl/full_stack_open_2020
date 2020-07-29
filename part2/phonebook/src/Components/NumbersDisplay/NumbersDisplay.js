@@ -7,7 +7,7 @@ const NumbersDisplay = ({ filteredPersons, handleDelete }) => {
     <div>
       <h2>Numbers</h2>
       {filteredPersons.map((person) => (
-        <Number key={person.name} person={person} handleDelete={handleDelete} />
+        <Number key={person.id} person={person} handleDelete={handleDelete} />
       ))}
     </div>
   );

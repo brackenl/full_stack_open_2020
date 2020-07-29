@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import noteService from "../../Services/numberService";
-
 import Notification from "../Notification/Notification";
 import Filter from "../Filter/Filter";
 import NewPersonForm from "../NewPersonForm/NewPersonForm";
@@ -20,7 +18,7 @@ const App = () => {
   }, []);
 
   const getAllPersons = () => {
-    noteService.getAll().then((persons) => {
+    numberService.getAll().then((persons) => {
       setPersons(persons);
     });
   };
@@ -67,6 +65,7 @@ const App = () => {
             }, 3000);
           })
           .catch((error) => {
+            console.log(error);
             setNotification({
               message: `${newPerson.name} was not found in the phonebook`,
               error: true,
@@ -95,7 +94,7 @@ const App = () => {
         })
         .catch((error) => {
           setNotification({
-            message: `${newPerson.name} was not found in the phonebook`,
+            message: error.response.data.error.message,
             error: true,
           });
           setTimeout(() => {
