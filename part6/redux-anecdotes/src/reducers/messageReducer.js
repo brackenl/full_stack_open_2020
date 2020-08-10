@@ -11,15 +11,18 @@ const messageReducer = (state = "", action) => {
   }
 };
 
+let notificationTimeout;
+
 export const showMessage = (anecdote, secs) => {
   return async (dispatch) => {
+    clearTimeout(notificationTimeout);
     dispatch({
       type: "SHOW_MESSAGE",
       data: {
         anecdote,
       },
     });
-    setTimeout(() => {
+    notificationTimeout = setTimeout(() => {
       dispatch({
         type: "CLEAR_MESSAGE",
       });

@@ -25,7 +25,7 @@ export const addVote = (id) => {
       ...relAnecdote,
       votes: relAnecdote.votes + 1,
     };
-    const res = anecdoteService.updateAnecdote(id, updatedAnec);
+    const res = await anecdoteService.updateAnecdote(id, updatedAnec);
     dispatch({
       type: "ADD_VOTE",
       data: res,
