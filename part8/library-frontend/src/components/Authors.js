@@ -25,6 +25,8 @@ const Authors = (props) => {
     return null;
   }
 
+  console.log(result);
+
   if (result.loading) {
     return <div className="loader">Loading...</div>;
   }
