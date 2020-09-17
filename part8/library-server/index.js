@@ -8,22 +8,22 @@ const mongoose = require("mongoose");
 const { v1: uuid } = require("uuid");
 const jwt = require("jsonwebtoken");
 
+const config = require("./utils/config");
+
 const Author = require("./models/author");
 const Book = require("./models/book");
 const User = require("./models/user");
 
-const JWT_SECRET = "SHOULD_HAVE_PUT_IN_ENV_LOL";
-
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
-const MONGODB_URI =
-  "mongodb+srv://fullstack:EstdDX825lI3c4Gj@cluster0.wzpjn.mongodb.net/library?retryWrites=true&w=majority";
-
-console.log("connecting to", MONGODB_URI);
+console.log("connecting to", config.MONGODB_URI);
 
 mongoose
-  .connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(config.MONGODB_URI, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
   .then(() => {
     console.log("connected to MongoDB");
   })
@@ -226,7 +226,7 @@ const resolvers = {
         id: user._id,
       };
 
-      return { value: jwt.sign(userForToken, JWT_SECRET) };
+      return { value: jwt.sign(userForToken, config.SECRET) };
     },
   },
 };
@@ -237,7 +237,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
-      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+      const decodedToken = jwt.verify(auth.substring(7), config.SECRET);
       const currentUser = await User.findById(decodedToken.id);
       return { currentUser };
     }
