@@ -25,8 +25,6 @@ const Authors = (props) => {
     return null;
   }
 
-  console.log(result);
-
   if (result.loading) {
     return <div className="loader">Loading...</div>;
   }
@@ -69,7 +67,6 @@ const Authors = (props) => {
                 </option>
               ))}
             </select>
-            {/* <input value={name} onChange={(e) => setName(e.target.value)} /> */}
             <br />
             <span>born</span>
             <input value={born} onChange={(e) => setBorn(e.target.value)} />

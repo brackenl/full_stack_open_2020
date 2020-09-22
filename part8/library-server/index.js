@@ -7,6 +7,9 @@ const {
 const mongoose = require("mongoose");
 const { v1: uuid } = require("uuid");
 const jwt = require("jsonwebtoken");
+const { PubSub } = require("apollo-server");
+
+const pubsub = new PubSub();
 
 const config = require("./utils/config");
 
@@ -56,6 +59,11 @@ const typeDefs = gql`
 
   type Token {
     value: String!
+    genre: String!
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 
   type Query {
@@ -185,6 +193,17 @@ const resolvers = {
       } catch (err) {
         throw new UserInputError(err.message, { invalidArgs: args });
       }
+
+      pubsub.publish("BOOK_ADDED", {
+        bookAdded: {
+          title: book.title,
+          published: book.published,
+          genres: book.genres,
+          author: await Author.findById(book.author),
+          id: book.id,
+        },
+      });
+      console.log(book);
       return book;
     },
     editAuthor: async (root, args, context) => {
@@ -226,7 +245,15 @@ const resolvers = {
         id: user._id,
       };
 
-      return { value: jwt.sign(userForToken, config.SECRET) };
+      return {
+        value: jwt.sign(userForToken, config.SECRET),
+        genre: user.favoriteGenre,
+      };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
 };
@@ -244,6 +271,7 @@ const server = new ApolloServer({
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });
