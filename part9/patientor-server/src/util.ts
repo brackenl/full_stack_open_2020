@@ -25,28 +25,29 @@ const toNewPatient = (obj: any): NewPatient => {
 
   const parseDate = (date: any): string => {
     if (!date || !isString(date) || !isDate(date)) {
+      console.log(date);
       throw new Error("Incorrect or missing date: " + date);
     }
     return date;
   };
 
   const parseGender = (gender: any): Gender => {
-    if (!gender || isGender(gender)) {
-      throw new Error("Incorrect or missing date: " + gender);
+    if (!gender || !isGender(gender)) {
+      throw new Error("Incorrect or missing gender: " + gender);
     }
     return gender;
   };
 
   const parseOccupation = (occupation: any): string => {
     if (!occupation || !isString(occupation)) {
-      throw new Error("Inccorrect or missing occupation" + occupation);
+      throw new Error("Inccorrect or missing occupation: " + occupation);
     }
     return occupation;
   };
 
   const parseSSN = (ssn: any): string => {
     if (!ssn || !isString(ssn)) {
-      throw new Error("Inccorrect or missing SSN" + ssn);
+      throw new Error("Inccorrect or missing SSN: " + ssn);
     }
     return ssn;
   };
