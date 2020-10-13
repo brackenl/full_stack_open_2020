@@ -4,14 +4,15 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
-import { useStateValue, createPatient, setAllPatients } from "./state";
-import { Patient } from "./types";
+import { useStateValue, createPatient, setAllPatients, setAllDiagnoses } from "./state";
+import { Diagnosis, Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import DetailsPage from "./DetailsPage";
 
 const App: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
+
   React.useEffect(() => {
     axios.get<void>(`${apiBaseUrl}/ping`);
 
@@ -21,12 +22,24 @@ const App: React.FC = () => {
           `${apiBaseUrl}/api/patients`
         );
         dispatch(setAllPatients(patientListFromApi));
-        // dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
       } catch (e) {
         console.error(e);
       }
     };
+
+    const fetchDiagnosisList = async () => {
+      try {
+        const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/api/diagnoses`
+        );
+        dispatch(setAllDiagnoses(diagnosisListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     fetchPatientList();
+    fetchDiagnosisList();
   }, [dispatch]);
 
   let relPatient: Patient;
@@ -46,15 +59,7 @@ const App: React.FC = () => {
     relPatient = patients[relId];
   };
 
-  // const relPatient = {
-  //   id: "d2773336-f723-11e9-8f0b-362b9e155667",
-  //   name: "John McClane",
-  //   dateOfBirth: "1986-07-09",
-  //   ssn: "090786-122X",
-  //   gender: Gender.Male,
-  //   occupation: "New york city cop",
-  //   entries: [],
-  // };
+
 
   return (
     <div className="App">

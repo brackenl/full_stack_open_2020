@@ -1,6 +1,6 @@
 import patientData from "../../data/patients";
 
-import { Patient, NewPatient, PatientsNoSSN } from "../types";
+import { Patient, NewPatient, PatientsNoSSN, Entry, NewEntry } from "../types";
 
 const getEntries = (): Patient[] => {
   return patientData;
@@ -28,8 +28,27 @@ const addEntry = (entry: NewPatient): Patient => {
   return newPatient;
 };
 
+const addNote = (id: string, note: NewEntry): Entry => {
+  const relPatient = patientData.find(patient => patient.id === id);
+  const relIndex = patientData.findIndex(patient => patient.id === id);
+
+  if (relPatient && (relIndex || relIndex === 0)) {
+    const newNote = {
+      id: (relPatient.entries.length + 1).toString(),
+      ...note
+    }
+    patientData[relIndex].entries.push(newNote);
+    return newNote;
+    
+  } else {
+    throw new Error("Patient not found!")
+  }
+
+}
+
 export default {
   getEntries,
   getEntriesNoSSN,
   addEntry,
+  addNote
 };
